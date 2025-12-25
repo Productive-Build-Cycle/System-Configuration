@@ -1,0 +1,7 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/PBC.SystemConfiguration.API/PBC.SystemConfiguration.API.csproj" />
+    <Project Path="src/PBC.SystemConfiguration.Core/PBC.SystemConfiguration.Core.csproj" />
+    <Project Path="src/PBC.SystemConfiguration.Infrastructure/PBC.SystemConfiguration.Infrastructure.csproj" />
+  </Folder>
+</Solution>
