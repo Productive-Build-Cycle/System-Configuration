@@ -7,9 +7,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Persistence\" />
-      <Folder Include="Repositories\" />
+      <Folder Include="Entities\" />
+      <Folder Include="Exceptions\" />
+      <Folder Include="Interfaces\" />
     </ItemGroup>
-    
 
 </Project>

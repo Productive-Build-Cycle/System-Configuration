@@ -13,10 +13,10 @@
     <ItemGroup>
       <Folder Include="Controllers\" />
       <Folder Include="Extensions\" />
+      <Folder Include="Middlewares\" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\PBC.SystemConfiguration.Core\PBC.SystemConfiguration.Core.csproj" />
       <ProjectReference Include="..\PBC.SystemConfiguration.Infrastructure\PBC.SystemConfiguration.Infrastructure.csproj" />
     </ItemGroup>
 
