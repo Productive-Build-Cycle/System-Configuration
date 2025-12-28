@@ -11,6 +11,7 @@ public class ProgramDbContext : DbContext
     }
 
     public DbSet<FeatureFlag> FeatureFlags { get; set; }
+    public DbSet<AppSetting> AppSettings { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -44,12 +45,24 @@ public class ProgramDbContext : DbContext
         {
             if (entry.State == EntityState.Modified)
             {
-                entry.Entity.LastUpdateDate = DateTime.UtcNow;
+                entry.Entity.LastUpdateDate = DateTime.Now;
             }
             else if (entry.State == EntityState.Added)
             {
-                entry.Entity.CreateDate = DateTime.UtcNow;
-                entry.Entity.LastUpdateDate = DateTime.UtcNow;
+                entry.Entity.CreateDate = DateTime.Now;
+                entry.Entity.LastUpdateDate = DateTime.Now;
+            }
+        }
+        foreach (var entry in ChangeTracker.Entries<AppSetting>())
+        {
+            if (entry.State == EntityState.Modified)
+            {
+                entry.Entity.LastUpdateDate = DateTime.Now;
+            }
+            else if (entry.State == EntityState.Added)
+            {
+                entry.Entity.CreateDate = DateTime.Now;
+                entry.Entity.LastUpdateDate = DateTime.Now;
             }
         }
 
