@@ -10,7 +10,8 @@ public class ProgramDbContext : DbContext
     {
     }
 
-    public DbSet<FeatureFlag> FeatureFlags { get; set; }
+    public DbSet<FeatureFlag> FeatureFlags { get; set; } 
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
