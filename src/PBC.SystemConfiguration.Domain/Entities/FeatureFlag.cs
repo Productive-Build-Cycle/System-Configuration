@@ -1,21 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace PBC.SystemConfiguration.Domain.Entities
+namespace PBC.SystemConfiguration.Domain.Entities;
+
+public class FeatureFlag : BaseEntity
 {
-    public class FeatureFlag
-    {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id {  get; set; }
-        [Required]
-        [StringLength(100)]
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public DateTime CreateDate { get; set; } = DateTime.Now;
-        public DateTime LastUpdateDate { get; set; } = DateTime.Now;
-    }
+    [Required] [StringLength(100)] public string Name { get; set; }
+    public string Description { get; set; }
 }
