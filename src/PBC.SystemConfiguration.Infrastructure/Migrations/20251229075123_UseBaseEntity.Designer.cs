@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using PBC.SystemConfiguration.Infrastructure.Persistence;
 using PBC.SystemConfiguration.Infrastructure.Persistence.DbContext;
 
 #nullable disable
@@ -13,8 +12,8 @@ using PBC.SystemConfiguration.Infrastructure.Persistence.DbContext;
 namespace PBC.SystemConfiguration.Infrastructure.Migrations
 {
     [DbContext(typeof(ProgramDbContext))]
-    [Migration("20251227190505_init-db")]
-    partial class initdb
+    [Migration("20251229075123_UseBaseEntity")]
+    partial class UseBaseEntity
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,6 +24,33 @@ namespace PBC.SystemConfiguration.Infrastructure.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("PBC.SystemConfiguration.Domain.Entities.AppSetting", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("LastUpdateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AppSettings");
+                });
 
             modelBuilder.Entity("PBC.SystemConfiguration.Domain.Entities.FeatureFlag", b =>
                 {

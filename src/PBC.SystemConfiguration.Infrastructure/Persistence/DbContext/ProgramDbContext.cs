@@ -1,9 +1,9 @@
-﻿using PBC.SystemConfiguration.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using PBC.SystemConfiguration.Domain.Entities;
 
-namespace PBC.SystemConfiguration.Infrastructure.Persistence;
+namespace PBC.SystemConfiguration.Infrastructure.Persistence.DbContext;
 
-public class ProgramDbContext : DbContext
+public class ProgramDbContext : Microsoft.EntityFrameworkCore.DbContext
 {
     public ProgramDbContext(DbContextOptions<ProgramDbContext> options)
         : base(options)

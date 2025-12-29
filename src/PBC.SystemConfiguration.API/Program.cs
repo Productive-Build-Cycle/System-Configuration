@@ -1,6 +1,7 @@
 
 using Microsoft.EntityFrameworkCore;
 using PBC.SystemConfiguration.Infrastructure.Persistence;
+using PBC.SystemConfiguration.Infrastructure.Persistence.DbContext;
 
 var builder = WebApplication.CreateBuilder(args);
 
