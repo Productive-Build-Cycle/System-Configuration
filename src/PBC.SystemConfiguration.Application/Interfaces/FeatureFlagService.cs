@@ -1,113 +1,72 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using PBC.SystemConfiguration.Application.Dtos;
+using PBC.SystemConfiguration.Application.Interfaces;
+using PBC.SystemConfiguration.Domain.Entities;
 
-namespace PBC.SystemConfiguration.Application.Interfaces
+public class FeatureFlagService : IFeatureFlagService
 {
-    using Microsoft.EntityFrameworkCore;
-    using PBC.SystemConfiguration.Application.Dtos;
-    using PBC.SystemConfiguration.Domain.Entities;
-    using PBC.SystemConfiguration.Infrastructure.Persistence;
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
+    private readonly IFeatureFlagRepository _repository;
 
-    public class FeatureFlagService : IFeatureFlagService
+    public FeatureFlagService(IFeatureFlagRepository repository)
     {
-        private readonly ProgramDbContext _context;
-
-        public FeatureFlagService(ProgramDbContext context)
-        {
-            _context = context;
-        }
-
-        public async Task<List<FeatureFlag>> GetAllAsync()
-        {
-            return await _context.FeatureFlags.ToListAsync();
-        }
-
-        public async Task<FeatureFlag> GetByIdAsync(int id)
-        {
-            return await _context.FeatureFlags.FindAsync(id);
-        }
-
-        public async Task<FeatureFlag> CreateAsync(CreateFeatureFlagDto dto)
-        {
-            var feature = new FeatureFlag
-            {
-                Name = dto.Name,
-                Description = dto.Description,
-                CreateDate = DateTime.UtcNow,
-                LastUpdateDate = DateTime.UtcNow
-            };
-
-            _context.FeatureFlags.Add(feature);
-            await _context.SaveChangesAsync();
-            return feature;
-        }
-
-        public async Task<FeatureFlag> UpdateAsync(int id, UpdateFeatureFlagDto dto)
-        {
-            var feature = await _context.FeatureFlags.FindAsync(id);
-            if (feature == null) return null;
-
-            feature.Name = dto.Name;
-            feature.Description = dto.Description;
-            feature.LastUpdateDate = DateTime.UtcNow;
-
-            await _context.SaveChangesAsync();
-            return feature;
-        }
-
-        public async Task<bool> DeleteAsync(int id)
-        {
-            var feature = await _context.FeatureFlags.FindAsync(id);
-            if (feature == null) return false;
-
-            _context.FeatureFlags.Remove(feature);
-            await _context.SaveChangesAsync();
-            return true;
-        }
-
-        public async Task<FeatureFlag> CreateAsync(CreateFeatureFlagDto dto)
-        {
-            
-            var exists = await _context.FeatureFlags.AnyAsync(f => f.Name == dto.Name);
-            if (exists)
-                throw new InvalidOperationException("FeatureFlag with this Name already exists.");
-
-            var feature = new FeatureFlag
-            {
-                Name = dto.Name,
-                Description = dto.Description,
-                CreateDate = DateTime.UtcNow,
-                LastUpdateDate = DateTime.UtcNow
-            };
-
-            _context.FeatureFlags.Add(feature);
-            await _context.SaveChangesAsync();
-            return feature;
-        }
-
-        public async Task<FeatureFlag> UpdateAsync(int id, UpdateFeatureFlagDto dto)
-        {
-            var feature = await _context.FeatureFlags.FindAsync(id);
-            if (feature == null) return null;
-
-            var exists = await _context.FeatureFlags
-                .AnyAsync(f => f.Name == dto.Name && f.Id != id);
-            if (exists)
-                throw new InvalidOperationException("Another FeatureFlag with this Name already exists.");
-
-            feature.Name = dto.Name;
-            feature.Description = dto.Description;
-            feature.LastUpdateDate = DateTime.UtcNow;
-
-            await _context.SaveChangesAsync();
-            return feature;
-        }
-
-
+        _repository = repository;
     }
 
+    public async Task<IEnumerable<FeatureFlag>> GetAllAsync()
+        => await _repository.GetAllAsync();
+
+    public async Task<FeatureFlag?> GetByIdAsync(Guid id)
+        => await _repository.GetByIdAsync(id);
+
+    public async Task CreateAsync(FeatureFlag featureFlag)
+        => await _repository.AddAsync(featureFlag);
+
+    public async Task UpdateAsync(Guid id, FeatureFlag featureFlag)
+    {
+        var existing = await _repository.GetByIdAsync(id);
+        if (existing == null)
+            throw new Exception("FeatureFlag not found");
+
+        existing.Name = featureFlag.Name;
+        existing.IsEnabled = featureFlag.IsEnabled;
+
+        await _repository.UpdateAsync(existing);
+    }
+
+    public async Task DeleteAsync(Guid id)
+        => await _repository.DeleteAsync(id);
+
+    public Task<FeatureFlag> CreateAsync(CreateFeatureFlagDto dto)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<bool> DeleteAsync(int id)
+    {
+        throw new NotImplementedException();
+    }
+
+    Task<List<FeatureFlag>> IFeatureFlagService.GetAllAsync()
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<FeatureFlag> GetByIdAsync(int id)
+    {
+        throw new NotImplementedException();
+    }
+
+    Task IFeatureFlagService.GetByIdAsync(Guid id)
+    {
+        return GetByIdAsync(id);
+    }
+
+    public Task GetByIdAsync(object id)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<FeatureFlag> UpdateAsync(int id, UpdateFeatureFlagDto dto)
+    {
+        throw new NotImplementedException();
+    }
 }

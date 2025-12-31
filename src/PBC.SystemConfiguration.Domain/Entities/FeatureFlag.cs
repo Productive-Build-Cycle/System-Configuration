@@ -17,5 +17,6 @@ namespace PBC.SystemConfiguration.Domain.Entities
         public string Description { get; set; }
         public DateTime CreateDate { get; set; } = DateTime.UtcNow;
         public DateTime LastUpdateDate { get; set; } = DateTime.UtcNow;
+        public bool IsEnabled { get; set; }
     }
 }

@@ -1,126 +1,47 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using PBC.SystemConfiguration.Application.Dtos;
+using PBC.SystemConfiguration.Application.Interfaces;
 using PBC.SystemConfiguration.Domain.Entities;
-using PBC.SystemConfiguration.Infrastructure.Persistence;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace PBC.SystemConfiguration.Api.Controllers
+[ApiController]
+[Route("api/feature-flags")]
+public class FeatureFlagsController : ControllerBase
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class FeatureFlagsController : ControllerBase
+    private readonly IFeatureFlagService _featureFlagService;
+
+    public FeatureFlagsController(IFeatureFlagService featureFlagService)
     {
-        private readonly ProgramDbContext _context;
+        _featureFlagService = featureFlagService;
+    }
 
-        public FeatureFlagsController(ProgramDbContext context)
-        {
-            _context = context;
-        }
+    [HttpGet]
+    public async Task<IActionResult> GetAll()
+        => Ok(await _featureFlagService.GetAllAsync());
 
-        [HttpGet]
-        public async Task<ActionResult<List<FeatureFlagDto>>> GetAll()
-        {
-            var features = await _context.FeatureFlags.ToListAsync();
-            return Ok(features.Select(f => new FeatureFlagDto
-            {
-                Id = f.Id,
-                Name = f.Name,
-                Description = f.Description,
-                CreateDate = f.CreateDate,
-                LastUpdateDate = f.LastUpdateDate
-            }).ToList());
-        }
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetById(Guid Id)
+    {
+        var result = await _featureFlagService.GetByIdAsync(id);
+        return result == null ? NotFound() : Ok(result);
+    }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<FeatureFlagDto>> GetById(int id)
-        {
-            var feature = await _context.FeatureFlags.FindAsync(id);
-            if (feature == null) return NotFound();
+    [HttpPost]
+    public async Task<IActionResult> Create(FeatureFlag featureFlag)
+    {
+        await _featureFlagService.CreateAsync(featureFlag);
+        return CreatedAtAction(nameof(GetById), new { id = featureFlag.Id }, featureFlag);
+    }
 
-            return Ok(new FeatureFlagDto
-            {
-                Id = feature.Id,
-                Name = feature.Name,
-                Description = feature.Description,
-                CreateDate = feature.CreateDate,
-                LastUpdateDate = feature.LastUpdateDate
-            });
-        }
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update(Guid Id, FeatureFlag featureFlag)
+    {
+        await _featureFlagService.UpdateAsync(Id, featureFlag);
+        return NoContent();
+    }
 
-        [HttpPost]
-        public async Task<ActionResult<FeatureFlagDto>> Create(CreateFeatureFlagDto dto)
-        {
-            
-            var exists = await _context.FeatureFlags.AnyAsync(f => f.Name == dto.Name);
-            if (exists)
-                return BadRequest(new { message = "FeatureFlag with this Name already exists." });
-
-            var feature = new FeatureFlag
-            {
-                Name = dto.Name,
-                Description = dto.Description,
-                CreateDate = System.DateTime.UtcNow,
-                LastUpdateDate = System.DateTime.UtcNow
-            };
-
-            _context.FeatureFlags.Add(feature);
-            await _context.SaveChangesAsync();
-
-            var result = new FeatureFlagDto
-            {
-                Id = feature.Id,
-                Name = feature.Name,
-                Description = feature.Description,
-                CreateDate = feature.CreateDate,
-                LastUpdateDate = feature.LastUpdateDate
-            };
-
-            return CreatedAtAction(nameof(GetById), new { id = feature.Id }, result);
-        }
-
-        [HttpPut("{id}")]
-        public async Task<ActionResult<FeatureFlagDto>> Update(int id, UpdateFeatureFlagDto dto)
-        {
-            var feature = await _context.FeatureFlags.FindAsync(id);
-            if (feature == null) return NotFound();
-
-            
-            var exists = await _context.FeatureFlags
-                .AnyAsync(f => f.Name == dto.Name && f.Id != id);
-            if (exists)
-                return BadRequest(new { message = "Another FeatureFlag with this Name already exists." });
-
-            feature.Name = dto.Name;
-            feature.Description = dto.Description;
-            feature.LastUpdateDate = System.DateTime.UtcNow;
-
-            await _context.SaveChangesAsync();
-
-            var result = new FeatureFlagDto
-            {
-                Id = feature.Id,
-                Name = feature.Name,
-                Description = feature.Description,
-                CreateDate = feature.CreateDate,
-                LastUpdateDate = feature.LastUpdateDate
-            };
-
-            return Ok(result);
-        }
-
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
-        {
-            var feature = await _context.FeatureFlags.FindAsync(id);
-            if (feature == null) return NotFound();
-
-            _context.FeatureFlags.Remove(feature);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(Guid Id)
+    {
+        await _featureFlagService.DeleteAsync(Id);
+        return NoContent();
     }
 }
