@@ -1,4 +1,5 @@
-﻿using PBC.SystemConfiguration.Application.Dtos;
+﻿
+using PBC.SystemConfiguration.Application.Dtos;
 
 namespace PBC.SystemConfiguration.Application.Interfaces
 {
