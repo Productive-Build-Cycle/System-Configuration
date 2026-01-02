@@ -1,71 +1,67 @@
-﻿using PBC.SystemConfiguration.Application.Dtos.AppSetting;
+﻿using PBC.SystemConfiguration.Application.Dtos.FeatureFlag;
 using PBC.SystemConfiguration.Application.Interfaces;
 using PBC.SystemConfiguration.Domain.Entities;
 using PBC.SystemConfiguration.Domain.Interfaces;
 
 namespace PBC.SystemConfiguration.Application.Services;
 
-public class AppSettingService(IAppSettingRepository repository) : IAppSettingService
+public class FeatureFlagService(IFeatureFlagRepository repository) : IFeatureFlagService
 {
-    public async Task<IEnumerable<AppSettingDto>> GetAllAsync(CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<FeatureFlagDto>> GetAllAsync(CancellationToken cancellationToken = default)
     {
         var entities = await repository.GetAllAsync(cancellationToken);
-        return entities.Select(e => new AppSettingDto
+        return entities.Select(e => new FeatureFlagDto
         {
-            Key = e.Key,
-            Value = e.Value,
+            Id = e.Id,
+            Name = e.Name,
             Description = e.Description,
             CreatedAt = e.CreatedAt,
             UpdatedAt = e.UpdatedAt
         });
     }
 
-    public async Task<AppSettingDto?> GetByKeyAsync(string key, CancellationToken cancellationToken = default)
+    public async Task<FeatureFlagDto?> GetByNameAsync(string name, CancellationToken cancellationToken = default)
     {
-        var entity = await repository.FindOneAsync(x => x.Key == key, cancellationToken);
+        var entity = await repository.FindOneAsync(x => x.Name == name, cancellationToken);
         if (entity == null) return null;
 
-        return new AppSettingDto
+        return new FeatureFlagDto
         {
             Id = entity.Id,
-            Key = entity.Key,
+            Name = entity.Name,
             Description = entity.Description,
             CreatedAt = entity.CreatedAt,
             UpdatedAt = entity.UpdatedAt
         };
     }
 
-    public async Task<AppSettingDto> CreateAsync(CreateAppSettingDto dto, CancellationToken cancellationToken = default)
+    public async Task<FeatureFlagDto> CreateAsync(CreateFeatureFlagDto dto, CancellationToken cancellationToken = default)
     {
-        var entity = new AppSetting
+        var entity = new FeatureFlag
         {
-            Key = dto.Key,
-            Value = dto.Value,
-            Type = dto.Type,
-            Description = dto.Description,
+            Name = dto.Name,
+            Description = dto.Description
         };
 
         await repository.AddAsync(entity, cancellationToken);
         await repository.SaveChangesAsync(cancellationToken);
-
-        return new AppSettingDto
+        
+        return new FeatureFlagDto
         {
             Id = entity.Id,
-            Key = entity.Key,
-            Value = entity.Value,
-            Type =  entity.Type,
+            Name = entity.Name,
             Description = entity.Description
         };
     }
 
-    public async Task<bool> UpdateAsync(int id, UpdateAppSettingDto dto, CancellationToken cancellationToken = default)
+    public async Task<bool> UpdateAsync(int id, UpdateFeatureFlagDto dto, CancellationToken cancellationToken = default)
     {
         var entity = await repository.GetByIdAsync(id, cancellationToken);
         if (entity == null) return false;
 
-        entity.Key = dto.Key;
+        entity.Name = dto.Name;
         entity.Description = dto.Description;
-
+        
         repository.Update(entity);
         await repository.SaveChangesAsync(cancellationToken);
         return true;

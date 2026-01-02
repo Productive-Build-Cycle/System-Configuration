@@ -6,6 +6,6 @@ public class FeatureFlagDto
     public string Name { get; set; }
     public bool IsEnabled { get; set; }
     public string? Description { get; set; }
-    public DateTime CreateDate { get; set; }
-    public DateTime LastUpdateDate { get; set; }
+    public DateTime CreatedAt { get; set; }
+    public DateTime? UpdatedAt { get; set; }
 }
