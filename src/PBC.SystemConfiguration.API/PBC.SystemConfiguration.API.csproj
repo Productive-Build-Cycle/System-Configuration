@@ -7,22 +7,19 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.1" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.1">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.1"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.1"/>
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Controllers\" />
-      <Folder Include="Middlewares\" />
+        <Folder Include="Controllers\"/>
+        <Folder Include="Middlewares\"/>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\PBC.SystemConfiguration.Application\PBC.SystemConfiguration.Application.csproj" />
-      <ProjectReference Include="..\PBC.SystemConfiguration.Domain\PBC.SystemConfiguration.Domain.csproj" />
-      <ProjectReference Include="..\PBC.SystemConfiguration.Infrastructure\PBC.SystemConfiguration.Infrastructure.csproj" />
+        <ProjectReference Include="..\PBC.SystemConfiguration.Application\PBC.SystemConfiguration.Application.csproj"/>
+        <ProjectReference Include="..\PBC.SystemConfiguration.Domain\PBC.SystemConfiguration.Domain.csproj"/>
+        <ProjectReference Include="..\PBC.SystemConfiguration.Infrastructure\PBC.SystemConfiguration.Infrastructure.csproj"/>
     </ItemGroup>
 
 </Project>
