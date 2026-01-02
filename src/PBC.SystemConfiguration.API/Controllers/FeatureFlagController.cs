@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PBC.SystemConfiguration.Application.Interfaces;
-using PBC.SystemConfiguration.Domain.Entities;
+using PBC.SystemConfiguration.Application.Dtos;
 
 [ApiController]
 [Route("api/feature-flags")]
@@ -13,35 +13,43 @@ public class FeatureFlagsController : ControllerBase
         _featureFlagService = featureFlagService;
     }
 
+    // GET /api/feature-flags
     [HttpGet]
     public async Task<IActionResult> GetAll()
-        => Ok(await _featureFlagService.GetAllAsync());
+    {
+        var result = await _featureFlagService.GetAllAsync();
+        return Ok(result);
+    }
 
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetById(Guid Id)
+    // GET /api/feature-flags/{id}
+    [HttpGet("{id:int}")]
+    public async Task<IActionResult> GetById(int id)
     {
         var result = await _featureFlagService.GetByIdAsync(id);
         return result == null ? NotFound() : Ok(result);
     }
 
+    // POST /api/feature-flags
     [HttpPost]
-    public async Task<IActionResult> Create(FeatureFlag featureFlag)
+    public async Task<IActionResult> Create(CreateFeatureFlagDto dto)
     {
-        await _featureFlagService.CreateAsync(featureFlag);
-        return CreatedAtAction(nameof(GetById), new { id = featureFlag.Id }, featureFlag);
+        var result = await _featureFlagService.CreateAsync(dto);
+        return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
     }
 
-    [HttpPut("{id}")]
-    public async Task<IActionResult> Update(Guid Id, FeatureFlag featureFlag)
+    // PUT /api/feature-flags/{id}
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> Update(int id, UpdateFeatureFlagDto dto)
     {
-        await _featureFlagService.UpdateAsync(Id, featureFlag);
-        return NoContent();
+        var result = await _featureFlagService.UpdateAsync(id, dto);
+        return result == null ? NotFound() : Ok(result);
     }
 
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(Guid Id)
+    // DELETE /api/feature-flags/{id}
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> Delete(int id)
     {
-        await _featureFlagService.DeleteAsync(Id);
-        return NoContent();
+        var deleted = await _featureFlagService.DeleteAsync(id);
+        return deleted ? NoContent() : NotFound();
     }
 }
