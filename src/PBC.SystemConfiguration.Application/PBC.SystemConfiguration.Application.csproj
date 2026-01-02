@@ -10,4 +10,8 @@
       <Folder Include="Services\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\PBC.SystemConfiguration.Domain\PBC.SystemConfiguration.Domain.csproj" />
+    </ItemGroup>
+
 </Project>

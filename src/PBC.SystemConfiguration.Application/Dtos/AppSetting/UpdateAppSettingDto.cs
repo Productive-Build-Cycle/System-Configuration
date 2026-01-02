@@ -1,6 +1,11 @@
-﻿namespace PBC.SystemConfiguration.Application.Dtos.AppSetting;
+﻿using PBC.SystemConfiguration.Domain.Enums;
+
+namespace PBC.SystemConfiguration.Application.Dtos.AppSetting;
+
 public class UpdateAppSettingDto
 {
-    public string Title { get; set; }
+    public string Key { get; set; }
+    public string Value { get; set; }
+    public AppSettingType Type { get; set; }
     public string Description { get; set; }
 }
