@@ -1,7 +1,9 @@
 using PBC.SystemConfiguration.API.Extensions;
 using PBC.SystemConfiguration.API.Middlewares;
+using Serilog;
 
-var builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder(args)
+    .AddSerilog();
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -21,9 +23,11 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseMiddleware<ExceptionHandlerMiddleware>();
-app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseRequestBodyLogging();
+app.UseSerilogRequestLogging(option => { option.IncludeQueryInRequestPath = true; });
 
 app.MapControllers();
 
