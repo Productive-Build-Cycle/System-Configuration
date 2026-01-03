@@ -16,6 +16,7 @@ public class FeatureFlagService(IFeatureFlagRepository repository) : IFeatureFla
             Id = e.Id,
             Name = e.Name,
             Description = e.Description,
+            IsEnabled = e.IsEnabled,
             CreatedAt = e.CreatedAt,
             UpdatedAt = e.UpdatedAt
         });
@@ -31,6 +32,7 @@ public class FeatureFlagService(IFeatureFlagRepository repository) : IFeatureFla
             Id = entity.Id,
             Name = entity.Name,
             Description = entity.Description,
+            IsEnabled = entity.IsEnabled,
             CreatedAt = entity.CreatedAt,
             UpdatedAt = entity.UpdatedAt
         };
@@ -38,10 +40,14 @@ public class FeatureFlagService(IFeatureFlagRepository repository) : IFeatureFla
 
     public async Task<FeatureFlagDto> CreateAsync(CreateFeatureFlagDto dto, CancellationToken cancellationToken = default)
     {
+        if (await repository.IsExistsAsync(x => x.Name == dto.Name, cancellationToken))
+            throw new ObjectAlreadyExistsException("Feature Flag", "name");
+        
         var entity = new FeatureFlag
         {
             Name = dto.Name,
-            Description = dto.Description
+            Description = dto.Description,
+            IsEnabled = false
         };
 
         await repository.AddAsync(entity, cancellationToken);
@@ -57,11 +63,28 @@ public class FeatureFlagService(IFeatureFlagRepository repository) : IFeatureFla
 
     public async Task UpdateAsync(int id, UpdateFeatureFlagDto dto, CancellationToken cancellationToken = default)
     {
+        var isNewNameNotUnique = await repository.IsExistsAsync(x => x.Name == dto.Name && x.Id != id, cancellationToken);
+        if (isNewNameNotUnique)
+            throw new ObjectAlreadyExistsException("App Setting", "key");
+        
         var entity = await repository.GetByIdAsync(id, cancellationToken);
         if (entity == null) throw new ObjectNotFoundException("Feature Flag");
 
         entity.Name = dto.Name;
         entity.Description = dto.Description;
+        entity.UpdatedAt = DateTime.Now;
+        
+        repository.Update(entity);
+        await repository.SaveChangesAsync(cancellationToken);
+    }
+
+    public async Task UpdateStatusAsync(string name, UpdateFeatureFlagStatusDto requestDto, CancellationToken cancellationToken = default)
+    {
+        var entity = await repository.FindOneAsync(x => x.Name == name, cancellationToken);
+        if (entity == null) throw new ObjectNotFoundException("Feature Flag");
+
+        entity.IsEnabled = requestDto.IsEnabled;
+        entity.UpdatedAt = DateTime.Now;
         
         repository.Update(entity);
         await repository.SaveChangesAsync(cancellationToken);

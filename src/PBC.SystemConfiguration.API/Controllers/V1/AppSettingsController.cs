@@ -70,7 +70,7 @@ public class AppSettingsController(IAppSettingService appSettingService) : BaseC
     public async Task<IActionResult> Create(CreateAppSettingDto createDto, CancellationToken cancellationToken)
     {
         var result = await appSettingService.CreateAsync(createDto, cancellationToken);
-        return ResponseHelper.CreateSuccessResponse(result, ResultEnum.CreatedSuccessfully.GetDescription());
+        return ResponseHelper.CreateResponse(201, ResultEnum.CreatedSuccessfully.GetDescription(), true, result);
     }
 
     /// <summary>
@@ -79,11 +79,11 @@ public class AppSettingsController(IAppSettingService appSettingService) : BaseC
     /// <param name="id">The ID of the app setting to update.</param>
     /// <param name="updateDto">The updated app setting data.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
-    /// <returns>The updated app setting.</returns>
-    /// <response code="200">Returns the updated app setting.</response>
+    /// <returns>No content.</returns>
+    /// <response code="200">Indicates successful update.</response>
     /// <response code="404">If the app setting is not found.</response>
     [HttpPut("{id:int}")]
-    [ProducesResponseType(typeof(Response<AppSettingDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Response<>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(Response<>), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Update(int id, UpdateAppSettingDto updateDto, CancellationToken cancellationToken)
     {

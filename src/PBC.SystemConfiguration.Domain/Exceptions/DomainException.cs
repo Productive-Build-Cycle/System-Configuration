@@ -9,12 +9,12 @@ public abstract class DomainException(string message) : Exception(message)
     public ResultEnum MessageEnum { get; set; }
 }
 
-public class EmptyFiledException : DomainException
+public class InvalidFieldException : DomainException
 {
-    public EmptyFiledException(string filedName) : base(string.Format(ResultEnum.FiledIsEmpty.GetDescription(), filedName))
+    public InvalidFieldException(string fieldName) : base(string.Format(ResultEnum.InvalidField.GetDescription(), fieldName))
     {
         StatusCode = 400;
-        MessageEnum = ResultEnum.FiledIsEmpty;
+        MessageEnum = ResultEnum.InvalidField;
     }
 }
 
@@ -24,5 +24,14 @@ public class ObjectNotFoundException : DomainException
     {
         StatusCode = 404;
         MessageEnum = ResultEnum.ObjectNotFound;
+    }
+}
+
+public class ObjectAlreadyExistsException : DomainException
+{
+    public ObjectAlreadyExistsException(string objectName, string fieldName) : base(string.Format(ResultEnum.ObjectAlreadyExists.GetDescription(), objectName, fieldName))
+    {
+        StatusCode = 409;
+        MessageEnum = ResultEnum.ObjectAlreadyExists;
     }
 }

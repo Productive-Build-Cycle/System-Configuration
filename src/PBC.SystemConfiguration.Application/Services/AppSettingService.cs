@@ -13,6 +13,7 @@ public class AppSettingService(IAppSettingRepository repository) : IAppSettingSe
         var entities = await repository.GetAllAsync(cancellationToken);
         return entities.Select(e => new AppSettingDto
         {
+            Id = e.Id,
             Key = e.Key,
             Value = e.Value,
             Description = e.Description,
@@ -30,6 +31,7 @@ public class AppSettingService(IAppSettingRepository repository) : IAppSettingSe
         {
             Id = entity.Id,
             Key = entity.Key,
+            Value = entity.Value,
             Description = entity.Description,
             CreatedAt = entity.CreatedAt,
             UpdatedAt = entity.UpdatedAt
@@ -38,6 +40,12 @@ public class AppSettingService(IAppSettingRepository repository) : IAppSettingSe
 
     public async Task<AppSettingDto> CreateAsync(CreateAppSettingDto dto, CancellationToken cancellationToken = default)
     {
+        if (dto.Type == 0)
+            throw new InvalidFieldException(nameof(dto.Type));
+
+        if (await repository.IsExistsAsync(x => x.Key == dto.Key, cancellationToken))
+            throw new ObjectAlreadyExistsException("App Setting", "key");
+
         var entity = new AppSetting
         {
             Key = dto.Key,
@@ -54,18 +62,28 @@ public class AppSettingService(IAppSettingRepository repository) : IAppSettingSe
             Id = entity.Id,
             Key = entity.Key,
             Value = entity.Value,
-            Type =  entity.Type,
+            Type = entity.Type,
             Description = entity.Description
         };
     }
 
     public async Task UpdateAsync(int id, UpdateAppSettingDto dto, CancellationToken cancellationToken = default)
     {
+        if (dto.Type == 0)
+            throw new InvalidFieldException(nameof(dto.Type));
+
+        var isNewKeyNotUnique = await repository.IsExistsAsync(x => x.Key == dto.Key && x.Id != id, cancellationToken);
+        if (isNewKeyNotUnique)
+            throw new ObjectAlreadyExistsException("App Setting", "key");
+
         var entity = await repository.GetByIdAsync(id, cancellationToken);
         if (entity == null) throw new ObjectNotFoundException("App Setting");
 
         entity.Key = dto.Key;
+        entity.Value = dto.Value;
+        entity.Type = dto.Type;
         entity.Description = dto.Description;
+        entity.UpdatedAt = DateTime.Now;
 
         repository.Update(entity);
         await repository.SaveChangesAsync(cancellationToken);

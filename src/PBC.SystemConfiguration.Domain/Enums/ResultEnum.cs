@@ -14,7 +14,9 @@ public enum ResultEnum
 
     [Description("Unexpected error")] UnexpectedError,
 
-    [Description("{0} can't be empty.")] FiledIsEmpty,
+    [Description("{0} field is invalid.")] InvalidField,
 
     [Description("{0} not found!")] ObjectNotFound,
+    
+    [Description("{0} with this {1} already exists!")] ObjectAlreadyExists,
 }
