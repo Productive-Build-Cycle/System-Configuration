@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PBC.SystemConfiguration.API.Helpers;
+using PBC.SystemConfiguration.Application.Dtos.Common;
 using PBC.SystemConfiguration.Application.Dtos.FeatureFlag;
 using PBC.SystemConfiguration.Application.Extensions;
 using PBC.SystemConfiguration.Application.Interfaces;
@@ -32,7 +33,7 @@ public class FeatureFlagController(IFeatureFlagService featureFlagService) : Bas
     /// <returns>A list of feature flags.</returns>
     /// <response code="200">Returns the list of feature flags.</response>
     [HttpGet]
-    [ProducesResponseType(typeof(IEnumerable<FeatureFlagDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Response<IEnumerable<FeatureFlagDto>>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
     {
         var result = await featureFlagService.GetAllAsync(cancellationToken);
@@ -48,8 +49,8 @@ public class FeatureFlagController(IFeatureFlagService featureFlagService) : Bas
     /// <response code="200">Returns the feature flag.</response>
     /// <response code="404">If the feature flag is not found.</response>
     [HttpGet("{name}")]
-    [ProducesResponseType(typeof(FeatureFlagDto), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(Response<FeatureFlagDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Response<>), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetByName(string name, CancellationToken cancellationToken)
     {
         var result = await featureFlagService.GetByNameAsync(name, cancellationToken);
@@ -68,8 +69,8 @@ public class FeatureFlagController(IFeatureFlagService featureFlagService) : Bas
     /// <response code="201">Returns the created feature flag.</response>
     /// <response code="400">If the input is invalid.</response>
     [HttpPost]
-    [ProducesResponseType(typeof(FeatureFlagDto), StatusCodes.Status201Created)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(Response<FeatureFlagDto>), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(Response<>), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Create(CreateFeatureFlagDto createDto, CancellationToken cancellationToken)
     {
         var result = await featureFlagService.CreateAsync(createDto, cancellationToken);
@@ -86,8 +87,8 @@ public class FeatureFlagController(IFeatureFlagService featureFlagService) : Bas
     /// <response code="200">Returns the updated feature flag.</response>
     /// <response code="404">If the feature flag is not found.</response>
     [HttpPut("{id:int}")]
-    [ProducesResponseType(typeof(FeatureFlagDto), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(Response<FeatureFlagDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Response<>), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Update(int id, UpdateFeatureFlagDto updateDto, CancellationToken cancellationToken)
     {
         var success = await featureFlagService.UpdateAsync(id, updateDto, cancellationToken);
@@ -106,8 +107,8 @@ public class FeatureFlagController(IFeatureFlagService featureFlagService) : Bas
     /// <response code="200">Indicates successful deletion.</response>
     /// <response code="404">If the feature flag is not found.</response>
     [HttpDelete("{id:int}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(Response<>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Response<>), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
     {
         var success = await featureFlagService.DeleteAsync(id, cancellationToken);
