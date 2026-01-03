@@ -1,6 +1,7 @@
 ﻿using PBC.SystemConfiguration.Application.Dtos.AppSetting;
 using PBC.SystemConfiguration.Application.Interfaces;
 using PBC.SystemConfiguration.Domain.Entities;
+using PBC.SystemConfiguration.Domain.Exceptions;
 using PBC.SystemConfiguration.Domain.Interfaces;
 
 namespace PBC.SystemConfiguration.Application.Services;
@@ -20,10 +21,10 @@ public class AppSettingService(IAppSettingRepository repository) : IAppSettingSe
         });
     }
 
-    public async Task<AppSettingDto?> GetByKeyAsync(string key, CancellationToken cancellationToken = default)
+    public async Task<AppSettingDto> GetByKeyAsync(string key, CancellationToken cancellationToken = default)
     {
         var entity = await repository.FindOneAsync(x => x.Key == key, cancellationToken);
-        if (entity == null) return null;
+        if (entity == null) throw new ObjectNotFoundException("App Setting");
 
         return new AppSettingDto
         {
@@ -58,26 +59,24 @@ public class AppSettingService(IAppSettingRepository repository) : IAppSettingSe
         };
     }
 
-    public async Task<bool> UpdateAsync(int id, UpdateAppSettingDto dto, CancellationToken cancellationToken = default)
+    public async Task UpdateAsync(int id, UpdateAppSettingDto dto, CancellationToken cancellationToken = default)
     {
         var entity = await repository.GetByIdAsync(id, cancellationToken);
-        if (entity == null) return false;
+        if (entity == null) throw new ObjectNotFoundException("App Setting");
 
         entity.Key = dto.Key;
         entity.Description = dto.Description;
 
         repository.Update(entity);
         await repository.SaveChangesAsync(cancellationToken);
-        return true;
     }
 
-    public async Task<bool> DeleteAsync(int id, CancellationToken cancellationToken = default)
+    public async Task DeleteAsync(int id, CancellationToken cancellationToken = default)
     {
         var entity = await repository.GetByIdAsync(id, cancellationToken);
-        if (entity == null) return false;
+        if (entity == null) throw new ObjectNotFoundException("App Setting");
 
         repository.Remove(entity);
         await repository.SaveChangesAsync(cancellationToken);
-        return true;
     }
 }

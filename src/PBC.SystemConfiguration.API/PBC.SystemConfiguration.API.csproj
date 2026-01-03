@@ -4,6 +4,7 @@
         <TargetFramework>net10.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
     </PropertyGroup>
 
     <ItemGroup>
@@ -11,10 +12,6 @@
         <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.1.1" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.1"/>
         <PackageReference Include="Swashbuckle.AspNetCore" Version="10.1.0" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <Folder Include="Middlewares\"/>
     </ItemGroup>
 
     <ItemGroup>

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Reflection;
 
-namespace PBC.SystemConfiguration.Application.Extensions;
+namespace PBC.SystemConfiguration.Domain.Extensions;
 
 public static class EnumExtension
 {

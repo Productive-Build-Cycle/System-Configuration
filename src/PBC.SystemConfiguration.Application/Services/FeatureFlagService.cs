@@ -1,6 +1,7 @@
 ﻿using PBC.SystemConfiguration.Application.Dtos.FeatureFlag;
 using PBC.SystemConfiguration.Application.Interfaces;
 using PBC.SystemConfiguration.Domain.Entities;
+using PBC.SystemConfiguration.Domain.Exceptions;
 using PBC.SystemConfiguration.Domain.Interfaces;
 
 namespace PBC.SystemConfiguration.Application.Services;
@@ -20,10 +21,10 @@ public class FeatureFlagService(IFeatureFlagRepository repository) : IFeatureFla
         });
     }
 
-    public async Task<FeatureFlagDto?> GetByNameAsync(string name, CancellationToken cancellationToken = default)
+    public async Task<FeatureFlagDto> GetByNameAsync(string name, CancellationToken cancellationToken = default)
     {
         var entity = await repository.FindOneAsync(x => x.Name == name, cancellationToken);
-        if (entity == null) return null;
+        if (entity == null) throw new ObjectNotFoundException("Feature Flag");
 
         return new FeatureFlagDto
         {
@@ -54,26 +55,24 @@ public class FeatureFlagService(IFeatureFlagRepository repository) : IFeatureFla
         };
     }
 
-    public async Task<bool> UpdateAsync(int id, UpdateFeatureFlagDto dto, CancellationToken cancellationToken = default)
+    public async Task UpdateAsync(int id, UpdateFeatureFlagDto dto, CancellationToken cancellationToken = default)
     {
         var entity = await repository.GetByIdAsync(id, cancellationToken);
-        if (entity == null) return false;
+        if (entity == null) throw new ObjectNotFoundException("Feature Flag");
 
         entity.Name = dto.Name;
         entity.Description = dto.Description;
         
         repository.Update(entity);
         await repository.SaveChangesAsync(cancellationToken);
-        return true;
     }
 
-    public async Task<bool> DeleteAsync(int id, CancellationToken cancellationToken = default)
+    public async Task DeleteAsync(int id, CancellationToken cancellationToken = default)
     {
         var entity = await repository.GetByIdAsync(id, cancellationToken);
-        if (entity == null) return false;
+        if (entity == null) throw new ObjectNotFoundException("Feature Flag");
 
         repository.Remove(entity);
         await repository.SaveChangesAsync(cancellationToken);
-        return true;
     }
 }

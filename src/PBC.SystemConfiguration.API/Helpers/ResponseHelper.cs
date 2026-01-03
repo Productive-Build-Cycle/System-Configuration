@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PBC.SystemConfiguration.Application.Dtos.Common;
-using PBC.SystemConfiguration.Application.Extensions;
 using PBC.SystemConfiguration.Domain.Enums;
+using PBC.SystemConfiguration.Domain.Extensions;
 
 namespace PBC.SystemConfiguration.API.Helpers;
 
