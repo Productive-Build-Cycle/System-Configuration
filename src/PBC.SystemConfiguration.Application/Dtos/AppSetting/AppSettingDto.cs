@@ -1,8 +1,14 @@
-﻿namespace PBC.SystemConfiguration.Application.Dtos.AppSetting;
+﻿using PBC.SystemConfiguration.Domain.Enums;
+
+namespace PBC.SystemConfiguration.Application.Dtos.AppSetting;
+
 public class AppSettingDto
 {
-    public string Title { get; set; }
-    public string Description { get; set; }
-    public DateTime CreateDate { get; set; }
-    public DateTime LastUpdateDate { get; set; }
+    public int Id { get; set; }
+    public string Key { get; set; }
+    public string Value { get; set; }
+    public AppSettingType Type { get; set; }
+    public string? Description { get; set; }
+    public DateTime CreatedAt { get; set; }
+    public DateTime? UpdatedAt { get; set; }
 }

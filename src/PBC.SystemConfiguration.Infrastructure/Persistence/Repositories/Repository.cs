@@ -17,7 +17,7 @@ public class Repository<T>(ProgramDbContext context) : IRepository<T> where T : 
     /// <returns>A task that represents the asynchronous operation. The task result contains an <see cref="IEnumerable{T}"/> of all entities.</returns>
     public async Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken = default)
     {
-        return await DbSet.ToListAsync(cancellationToken);
+        return await DbSet.AsNoTracking().ToListAsync(cancellationToken);
     }
 
     /// <summary>
@@ -31,6 +31,19 @@ public class Repository<T>(ProgramDbContext context) : IRepository<T> where T : 
     public async Task<T?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
     {
         return await DbSet.FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
+    }
+    
+    /// <summary>
+    /// Asynchronously retrieves an entity of type <typeparamref name="T"/> by filter.
+    /// </summary>
+    /// <param name="predicate">An expression to filter the entities.</param>
+    /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation. The task result contains the entity of type <typeparamref name="T"/> if found; otherwise, <c>null</c>.
+    /// </returns>
+    public async Task<T?> FindOneAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
+    {
+        return await DbSet.FirstOrDefaultAsync(predicate, cancellationToken);
     }
 
     /// <summary>
@@ -118,5 +131,16 @@ public class Repository<T>(ProgramDbContext context) : IRepository<T> where T : 
     public async Task<bool> IsExistsAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
     {
         return await DbSet.AnyAsync(predicate, cancellationToken);
+    }
+    
+    /// <summary>
+    /// Persists all pending changes in the current context to the underlying data store asynchronously.
+    /// </summary>
+    /// <param name="cancellationToken">
+    /// A token to observe while waiting for the operation to complete.
+    /// </param>
+    public async Task SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        await context.SaveChangesAsync(cancellationToken);
     }
 }

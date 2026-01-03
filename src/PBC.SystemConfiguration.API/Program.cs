@@ -1,32 +1,22 @@
-
-using Microsoft.EntityFrameworkCore;
 using PBC.SystemConfiguration.API.Extensions;
-using PBC.SystemConfiguration.Infrastructure.Persistence;
-using PBC.SystemConfiguration.Infrastructure.Persistence.DbContext;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
-builder.Services.ConfigureServices();
-builder.Services.AddDbContext<ProgramDbContext>(options =>
-    options.UseSqlServer(
-        builder.Configuration.GetConnectionString("DefaultConnection"),
-        sql => sql.MigrationsAssembly("PBC.SystemConfiguration.Infrastructure") 
-    )
-);
-
-
-//Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.ConfigureServices(builder.Configuration);
+builder.Services.AddApisVersioning();
+builder.Services.AddSwagger();
+builder.Services.ConfigureApiBehavior();
 
 var app = builder.Build();
 
 //Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
