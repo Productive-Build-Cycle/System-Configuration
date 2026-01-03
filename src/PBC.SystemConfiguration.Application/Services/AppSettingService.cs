@@ -38,6 +38,9 @@ public class AppSettingService(IAppSettingRepository repository) : IAppSettingSe
 
     public async Task<AppSettingDto> CreateAsync(CreateAppSettingDto dto, CancellationToken cancellationToken = default)
     {
+        if (await repository.IsExistsAsync(x => x.Key == dto.Key, cancellationToken))
+            throw new ObjectAlreadyExistsException("App Setting", "key");
+        
         var entity = new AppSetting
         {
             Key = dto.Key,

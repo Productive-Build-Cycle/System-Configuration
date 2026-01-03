@@ -38,6 +38,9 @@ public class FeatureFlagService(IFeatureFlagRepository repository) : IFeatureFla
 
     public async Task<FeatureFlagDto> CreateAsync(CreateFeatureFlagDto dto, CancellationToken cancellationToken = default)
     {
+        if (await repository.IsExistsAsync(x => x.Name == dto.Name, cancellationToken))
+            throw new ObjectAlreadyExistsException("Feature Flag", "name");
+        
         var entity = new FeatureFlag
         {
             Name = dto.Name,

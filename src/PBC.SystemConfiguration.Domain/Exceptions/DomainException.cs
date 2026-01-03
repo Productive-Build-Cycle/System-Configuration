@@ -26,3 +26,12 @@ public class ObjectNotFoundException : DomainException
         MessageEnum = ResultEnum.ObjectNotFound;
     }
 }
+
+public class ObjectAlreadyExistsException : DomainException
+{
+    public ObjectAlreadyExistsException(string objectName, string fieldName) : base(string.Format(ResultEnum.ObjectAlreadyExists.GetDescription(), objectName, fieldName))
+    {
+        StatusCode = 409;
+        MessageEnum = ResultEnum.ObjectAlreadyExists;
+    }
+}
