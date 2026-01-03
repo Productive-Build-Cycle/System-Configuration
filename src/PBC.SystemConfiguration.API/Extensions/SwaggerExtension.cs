@@ -20,6 +20,12 @@ public static class SwaggerExtension
                     Description = "API documentation for the System Configuration."
                 });
             }
+            
+            var xmlFile = Path.Combine(AppContext.BaseDirectory, "PBC.SystemConfiguration.API.xml");
+            if (File.Exists(xmlFile))
+            {
+                options.IncludeXmlComments(xmlFile, includeControllerXmlComments: true);
+            }
         });
     }
 }
