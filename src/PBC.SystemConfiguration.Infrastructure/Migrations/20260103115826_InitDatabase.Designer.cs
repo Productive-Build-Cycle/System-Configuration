@@ -12,8 +12,8 @@ using PBC.SystemConfiguration.Infrastructure.Persistence.DbContext;
 namespace PBC.SystemConfiguration.Infrastructure.Migrations
 {
     [DbContext(typeof(ProgramDbContext))]
-    [Migration("20260102213648_SeedData")]
-    partial class SeedData
+    [Migration("20260103115826_InitDatabase")]
+    partial class InitDatabase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
