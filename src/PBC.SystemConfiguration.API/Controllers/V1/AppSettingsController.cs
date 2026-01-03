@@ -50,7 +50,7 @@ public class AppSettingsController(IAppSettingService appSettingService) : BaseC
     [HttpGet("{key}")]
     [ProducesResponseType(typeof(Response<AppSettingDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(Response<>), StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetById(string key, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetByKey(string key, CancellationToken cancellationToken)
     {
         var result = await appSettingService.GetByKeyAsync(key, cancellationToken);
         return ResponseHelper.CreateSuccessResponse(result);

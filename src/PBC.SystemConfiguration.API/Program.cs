@@ -12,6 +12,7 @@ builder.Services.ConfigureServices(builder.Configuration);
 builder.Services.AddApisVersioning();
 builder.Services.AddSwagger();
 builder.Services.ConfigureApiBehavior();
+builder.Services.AddMemoryCache();
 
 var app = builder.Build();
 
