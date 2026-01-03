@@ -1,19 +1,16 @@
-
 using Microsoft.EntityFrameworkCore;
 using PBC.SystemConfiguration.API.Extensions;
-using PBC.SystemConfiguration.Infrastructure.Persistence;
 using PBC.SystemConfiguration.Infrastructure.Persistence.DbContext;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
 builder.Services.ConfigureServices();
 builder.Services.AddDbContext<ProgramDbContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection"),
-        sql => sql.MigrationsAssembly("PBC.SystemConfiguration.Infrastructure") 
+        sql => sql.MigrationsAssembly("PBC.SystemConfiguration.Infrastructure")
     )
 );
 
