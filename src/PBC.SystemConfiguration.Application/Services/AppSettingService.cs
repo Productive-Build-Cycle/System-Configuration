@@ -72,8 +72,8 @@ public class AppSettingService(IAppSettingRepository repository) : IAppSettingSe
         if (dto.Type == 0)
             throw new InvalidFieldException(nameof(dto.Type));
 
-        var isNewKeyUnique = await repository.IsExistsAsync(x => x.Key == dto.Key && x.Id != id, cancellationToken);
-        if (isNewKeyUnique)
+        var isNewKeyNotUnique = await repository.IsExistsAsync(x => x.Key == dto.Key && x.Id != id, cancellationToken);
+        if (isNewKeyNotUnique)
             throw new ObjectAlreadyExistsException("App Setting", "key");
 
         var entity = await repository.GetByIdAsync(id, cancellationToken);

@@ -16,6 +16,7 @@ public class FeatureFlagService(IFeatureFlagRepository repository) : IFeatureFla
             Id = e.Id,
             Name = e.Name,
             Description = e.Description,
+            IsEnabled = e.IsEnabled,
             CreatedAt = e.CreatedAt,
             UpdatedAt = e.UpdatedAt
         });
@@ -31,6 +32,7 @@ public class FeatureFlagService(IFeatureFlagRepository repository) : IFeatureFla
             Id = entity.Id,
             Name = entity.Name,
             Description = entity.Description,
+            IsEnabled = entity.IsEnabled,
             CreatedAt = entity.CreatedAt,
             UpdatedAt = entity.UpdatedAt
         };
@@ -44,7 +46,8 @@ public class FeatureFlagService(IFeatureFlagRepository repository) : IFeatureFla
         var entity = new FeatureFlag
         {
             Name = dto.Name,
-            Description = dto.Description
+            Description = dto.Description,
+            IsEnabled = false
         };
 
         await repository.AddAsync(entity, cancellationToken);
@@ -60,6 +63,10 @@ public class FeatureFlagService(IFeatureFlagRepository repository) : IFeatureFla
 
     public async Task UpdateAsync(int id, UpdateFeatureFlagDto dto, CancellationToken cancellationToken = default)
     {
+        var isNewNameNotUnique = await repository.IsExistsAsync(x => x.Name == dto.Name && x.Id != id, cancellationToken);
+        if (isNewNameNotUnique)
+            throw new ObjectAlreadyExistsException("App Setting", "key");
+        
         var entity = await repository.GetByIdAsync(id, cancellationToken);
         if (entity == null) throw new ObjectNotFoundException("Feature Flag");
 
