@@ -5,7 +5,7 @@ using PBC.SystemConfiguration.Application.Extensions;
 using PBC.SystemConfiguration.Application.Interfaces;
 using PBC.SystemConfiguration.Domain.Enums;
 
-namespace PBC.SystemConfiguration.API.Controllers;
+namespace PBC.SystemConfiguration.API.Controllers.V1;
 
 public class AppSettingsController(IAppSettingService appSettingService) : BaseController
 {
