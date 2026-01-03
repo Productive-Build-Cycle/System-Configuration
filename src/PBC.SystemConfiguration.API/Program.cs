@@ -8,6 +8,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.ConfigureServices(builder.Configuration);
 builder.Services.AddApisVersioning();
 builder.Services.AddSwagger();
+builder.Services.ConfigureApiBehavior();
 
 var app = builder.Build();
 
