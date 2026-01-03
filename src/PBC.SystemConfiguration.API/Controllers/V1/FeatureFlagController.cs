@@ -2,9 +2,9 @@
 using PBC.SystemConfiguration.API.Helpers;
 using PBC.SystemConfiguration.Application.Dtos.Common;
 using PBC.SystemConfiguration.Application.Dtos.FeatureFlag;
-using PBC.SystemConfiguration.Application.Extensions;
 using PBC.SystemConfiguration.Application.Interfaces;
 using PBC.SystemConfiguration.Domain.Enums;
+using PBC.SystemConfiguration.Domain.Extensions;
 
 namespace PBC.SystemConfiguration.API.Controllers.V1;
 
@@ -54,9 +54,6 @@ public class FeatureFlagController(IFeatureFlagService featureFlagService) : Bas
     public async Task<IActionResult> GetByName(string name, CancellationToken cancellationToken)
     {
         var result = await featureFlagService.GetByNameAsync(name, cancellationToken);
-        if (result == null)
-            return ResponseHelper.CreateErrorResponse<FeatureFlagDto>(404, "Feature Flag not found");
-
         return ResponseHelper.CreateSuccessResponse(result);
     }
 
@@ -91,10 +88,7 @@ public class FeatureFlagController(IFeatureFlagService featureFlagService) : Bas
     [ProducesResponseType(typeof(Response<>), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Update(int id, UpdateFeatureFlagDto updateDto, CancellationToken cancellationToken)
     {
-        var success = await featureFlagService.UpdateAsync(id, updateDto, cancellationToken);
-        if (!success)
-            return ResponseHelper.CreateErrorResponse<FeatureFlagDto>(404, "Feature Flag not found");
-
+        await featureFlagService.UpdateAsync(id, updateDto, cancellationToken);
         return ResponseHelper.CreateSuccessResponse<object>(null, ResultEnum.UpdatedSuccessfully.GetDescription());
     }
 
@@ -111,10 +105,7 @@ public class FeatureFlagController(IFeatureFlagService featureFlagService) : Bas
     [ProducesResponseType(typeof(Response<>), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
     {
-        var success = await featureFlagService.DeleteAsync(id, cancellationToken);
-        if (!success)
-            return ResponseHelper.CreateErrorResponse<FeatureFlagDto>(404, "Feature Flag not found");
-
+        await featureFlagService.DeleteAsync(id, cancellationToken);
         return ResponseHelper.CreateSuccessResponse<object>(null, ResultEnum.DeletedSuccessfully.GetDescription());
     }
 }

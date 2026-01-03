@@ -2,9 +2,9 @@
 using PBC.SystemConfiguration.API.Helpers;
 using PBC.SystemConfiguration.Application.Dtos.AppSetting;
 using PBC.SystemConfiguration.Application.Dtos.Common;
-using PBC.SystemConfiguration.Application.Extensions;
 using PBC.SystemConfiguration.Application.Interfaces;
 using PBC.SystemConfiguration.Domain.Enums;
+using PBC.SystemConfiguration.Domain.Extensions;
 
 namespace PBC.SystemConfiguration.API.Controllers.V1;
 
@@ -53,9 +53,6 @@ public class AppSettingsController(IAppSettingService appSettingService) : BaseC
     public async Task<IActionResult> GetById(string key, CancellationToken cancellationToken)
     {
         var result = await appSettingService.GetByKeyAsync(key, cancellationToken);
-        if (result == null)
-            return ResponseHelper.CreateErrorResponse<AppSettingDto>(404, "App Setting not found");
-
         return ResponseHelper.CreateSuccessResponse(result);
     }
 
@@ -90,10 +87,7 @@ public class AppSettingsController(IAppSettingService appSettingService) : BaseC
     [ProducesResponseType(typeof(Response<>), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Update(int id, UpdateAppSettingDto updateDto, CancellationToken cancellationToken)
     {
-        var success = await appSettingService.UpdateAsync(id, updateDto, cancellationToken);
-        if (!success)
-            return ResponseHelper.CreateErrorResponse<AppSettingDto>(404, "App Setting not found");
-
+        await appSettingService.UpdateAsync(id, updateDto, cancellationToken);
         return ResponseHelper.CreateSuccessResponse<object>(null, ResultEnum.UpdatedSuccessfully.GetDescription());
     }
 
@@ -110,10 +104,7 @@ public class AppSettingsController(IAppSettingService appSettingService) : BaseC
     [ProducesResponseType(typeof(Response<>), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
     {
-        var success = await appSettingService.DeleteAsync(id, cancellationToken);
-        if (!success)
-            return ResponseHelper.CreateErrorResponse<AppSettingDto>(404, "App Setting not found");
-
+        await appSettingService.DeleteAsync(id, cancellationToken);
         return ResponseHelper.CreateSuccessResponse<object>(null, ResultEnum.DeletedSuccessfully.GetDescription());
     }
 }
