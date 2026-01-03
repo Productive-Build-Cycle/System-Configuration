@@ -15,10 +15,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Middlewares\"/>
-    </ItemGroup>
-
-    <ItemGroup>
         <ProjectReference Include="..\PBC.SystemConfiguration.Application\PBC.SystemConfiguration.Application.csproj"/>
         <ProjectReference Include="..\PBC.SystemConfiguration.Domain\PBC.SystemConfiguration.Domain.csproj"/>
         <ProjectReference Include="..\PBC.SystemConfiguration.Infrastructure\PBC.SystemConfiguration.Infrastructure.csproj"/>
