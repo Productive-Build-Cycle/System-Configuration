@@ -72,6 +72,7 @@ public class FeatureFlagService(IFeatureFlagRepository repository) : IFeatureFla
 
         entity.Name = dto.Name;
         entity.Description = dto.Description;
+        entity.UpdatedAt = DateTime.Now;
         
         repository.Update(entity);
         await repository.SaveChangesAsync(cancellationToken);
