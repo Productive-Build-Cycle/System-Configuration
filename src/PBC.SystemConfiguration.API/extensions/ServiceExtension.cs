@@ -5,11 +5,11 @@ namespace PBC.SystemConfiguration.API.Extensions;
 
 public static class ServiceExtension
 {
-    public static IServiceCollection ConfigureServices(this IServiceCollection services)
+    public static IServiceCollection ConfigureServices(this IServiceCollection services, IConfiguration configuration)
     {
         services
             .AddApplicationServices()
-            .AddInfrastructureServices();
+            .AddInfrastructureServices(configuration);
 
         return services;
     }
