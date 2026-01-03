@@ -1,22 +1,34 @@
-var builder = WebApplication.CreateBuilder(args);
+using PBC.SystemConfiguration.API.Extensions;
+using PBC.SystemConfiguration.API.Middlewares;
+using Serilog;
+
+var builder = WebApplication.CreateBuilder(args)
+    .AddSerilog();
 
 // Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.ConfigureServices(builder.Configuration);
+builder.Services.AddApisVersioning();
+builder.Services.AddSwagger();
+builder.Services.ConfigureApiBehavior();
+builder.Services.AddMemoryCache();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+//Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+app.UseMiddleware<ExceptionHandlerMiddleware>();
 
 app.UseAuthorization();
+
+app.UseRequestBodyLogging();
+app.UseSerilogRequestLogging(option => { option.IncludeQueryInRequestPath = true; });
 
 app.MapControllers();
 
