@@ -71,7 +71,7 @@ public class FeatureFlagController(IFeatureFlagService featureFlagService) : Bas
     public async Task<IActionResult> Create(CreateFeatureFlagDto createDto, CancellationToken cancellationToken)
     {
         var result = await featureFlagService.CreateAsync(createDto, cancellationToken);
-        return ResponseHelper.CreateSuccessResponse(result, ResultEnum.CreatedSuccessfully.GetDescription());
+        return ResponseHelper.CreateResponse(201, ResultEnum.CreatedSuccessfully.GetDescription(), true, result);
     }
 
     /// <summary>

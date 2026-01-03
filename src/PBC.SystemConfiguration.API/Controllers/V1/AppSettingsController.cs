@@ -70,7 +70,7 @@ public class AppSettingsController(IAppSettingService appSettingService) : BaseC
     public async Task<IActionResult> Create(CreateAppSettingDto createDto, CancellationToken cancellationToken)
     {
         var result = await appSettingService.CreateAsync(createDto, cancellationToken);
-        return ResponseHelper.CreateSuccessResponse(result, ResultEnum.CreatedSuccessfully.GetDescription());
+        return ResponseHelper.CreateResponse(201, ResultEnum.CreatedSuccessfully.GetDescription(), true, result);
     }
 
     /// <summary>
