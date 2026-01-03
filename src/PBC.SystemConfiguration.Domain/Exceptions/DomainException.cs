@@ -9,12 +9,12 @@ public abstract class DomainException(string message) : Exception(message)
     public ResultEnum MessageEnum { get; set; }
 }
 
-public class EmptyFiledException : DomainException
+public class InvalidFieldException : DomainException
 {
-    public EmptyFiledException(string filedName) : base(string.Format(ResultEnum.FiledIsEmpty.GetDescription(), filedName))
+    public InvalidFieldException(string fieldName) : base(string.Format(ResultEnum.InvalidField.GetDescription(), fieldName))
     {
         StatusCode = 400;
-        MessageEnum = ResultEnum.FiledIsEmpty;
+        MessageEnum = ResultEnum.InvalidField;
     }
 }
 

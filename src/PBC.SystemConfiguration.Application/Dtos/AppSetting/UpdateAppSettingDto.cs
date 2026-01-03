@@ -4,8 +4,8 @@ namespace PBC.SystemConfiguration.Application.Dtos.AppSetting;
 
 public class UpdateAppSettingDto
 {
-    public string Key { get; set; }
-    public string Value { get; set; }
+    public required string Key { get; set; }
+    public required string Value { get; set; }
     public AppSettingType Type { get; set; }
-    public string Description { get; set; }
+    public  string? Description { get; set; }
 }
