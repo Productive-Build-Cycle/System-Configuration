@@ -78,6 +78,18 @@ public class FeatureFlagService(IFeatureFlagRepository repository) : IFeatureFla
         await repository.SaveChangesAsync(cancellationToken);
     }
 
+    public async Task UpdateStatusAsync(string name, UpdateFeatureFlagStatusDto requestDto, CancellationToken cancellationToken = default)
+    {
+        var entity = await repository.FindOneAsync(x => x.Name == name, cancellationToken);
+        if (entity == null) throw new ObjectNotFoundException("Feature Flag");
+
+        entity.IsEnabled = requestDto.IsEnabled;
+        entity.UpdatedAt = DateTime.Now;
+        
+        repository.Update(entity);
+        await repository.SaveChangesAsync(cancellationToken);
+    }
+
     public async Task DeleteAsync(int id, CancellationToken cancellationToken = default)
     {
         var entity = await repository.GetByIdAsync(id, cancellationToken);

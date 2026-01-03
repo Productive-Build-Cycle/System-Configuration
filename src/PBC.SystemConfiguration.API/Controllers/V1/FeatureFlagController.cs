@@ -80,11 +80,11 @@ public class FeatureFlagController(IFeatureFlagService featureFlagService) : Bas
     /// <param name="id">The ID of the feature flag to update.</param>
     /// <param name="updateDto">The updated feature flag data.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
-    /// <returns>The updated feature flag.</returns>
-    /// <response code="200">Returns the updated feature flag.</response>
+    /// <returns>No content.</returns>
+    /// <response code="200">Indicates successful update.</response>
     /// <response code="404">If the feature flag is not found.</response>
     [HttpPut("{id:int}")]
-    [ProducesResponseType(typeof(Response<FeatureFlagDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Response<>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(Response<>), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Update(int id, UpdateFeatureFlagDto updateDto, CancellationToken cancellationToken)
     {
@@ -92,6 +92,24 @@ public class FeatureFlagController(IFeatureFlagService featureFlagService) : Bas
         return ResponseHelper.CreateSuccessResponse<object>(null, ResultEnum.UpdatedSuccessfully.GetDescription());
     }
 
+    /// <summary>
+    /// Updates status an existing feature flag.
+    /// </summary>
+    /// <param name="name">The name of the feature flag to update.</param>
+    /// <param name="requestDto">The updated feature flag data.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>No content.</returns>
+    /// <response code="200">Indicates successful update.</response>
+    /// <response code="404">If the feature flag is not found.</response>
+    [HttpPatch("{name}")]
+    [ProducesResponseType(typeof(Response<>), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(Response<>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> UpdateStatus(string name, UpdateFeatureFlagStatusDto requestDto, CancellationToken cancellationToken)
+    {
+        await featureFlagService.UpdateStatusAsync(name, requestDto, cancellationToken);
+        return ResponseHelper.CreateSuccessResponse<object>(null, ResultEnum.UpdatedSuccessfully.GetDescription());
+    }
+    
     /// <summary>
     /// Deletes a feature flag.
     /// </summary>
